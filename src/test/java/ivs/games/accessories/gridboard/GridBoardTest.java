@@ -3,6 +3,9 @@ package ivs.games.accessories.gridboard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -65,5 +68,46 @@ class GridBoardTest {
                 () -> board.validatePosition(null));
 
         assertEquals("Position must not be null", exception.getMessage());
+    }
+
+    @Test
+    void visitsOnlyOccupiedCellsInRowMajorOrder() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 3);
+        board.place(new Position(1, 2), TestPiece.SECOND);
+        board.place(new Position(0, 1), TestPiece.FIRST);
+        board.place(new Position(1, 0), TestPiece.FIRST);
+
+        List<Position> positions = new ArrayList<>();
+        List<TestPiece> pieces = new ArrayList<>();
+
+        board.forEachPiece((position, piece) -> {
+            positions.add(position);
+            pieces.add(piece);
+        });
+
+        assertEquals(List.of(
+                new Position(0, 1),
+                new Position(1, 0),
+                new Position(1, 2)), positions);
+        assertEquals(List.of(
+                TestPiece.FIRST,
+                TestPiece.FIRST,
+                TestPiece.SECOND), pieces);
+    }
+
+    @Test
+    void doesNotCallActionForEmptyBoard() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 3);
+
+        board.forEachPiece((position, piece) -> {
+            throw new AssertionError("No pieces should be visited");
+        });
+    }
+
+    @Test
+    void rejectsNullAction() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 3);
+
+        assertThrows(NullPointerException.class, () -> board.forEachPiece(null));
     }
 }

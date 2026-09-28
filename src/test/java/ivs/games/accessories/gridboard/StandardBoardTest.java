@@ -11,11 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StandardBoardTest {
 
-    private enum TestPiece implements Piece {
-        FIRST,
-        SECOND
-    }
-
     @Test
     void createsEmptyBoardWithGivenDimensions() {
         StandardBoard<TestPiece> board = new StandardBoard<>(8, 10);
@@ -103,5 +98,19 @@ class StandardBoardTest {
         assertThrows(NullPointerException.class, () -> board.get(null));
         assertThrows(IllegalArgumentException.class,
                 () -> board.place(new Position(2, 0), TestPiece.FIRST));
+    }
+
+    @Test
+    void isEmptyReflectsPlacementAndRemoval() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 2);
+        Position position = new Position(0, 1);
+
+        assertTrue(board.isEmpty());
+
+        board.place(position, TestPiece.FIRST);
+        assertFalse(board.isEmpty());
+
+        board.remove(position);
+        assertTrue(board.isEmpty());
     }
 }

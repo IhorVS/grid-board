@@ -3,6 +3,8 @@ package ivs.games.accessories.gridboard;
 import lombok.Getter;
 import org.apache.commons.lang3.Validate;
 
+import java.util.function.BiConsumer;
+
 /**
  * A grid board backed by a two-dimensional array.
  *
@@ -33,12 +35,18 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
         this.cells = new Object[rows][columns];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmptyCell(Position position) {
         validatePosition(position);
         return cells[position.row()][position.column()] == null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("unchecked")
     public P get(Position position) {
@@ -46,6 +54,9 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
         return (P) cells[position.row()][position.column()];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void place(Position position, P piece) {
         validatePosition(position);
@@ -57,6 +68,9 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
         cells[position.row()][position.column()] = piece;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P remove(Position position) {
         P piece = get(position);
@@ -65,5 +79,40 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
 
         cells[position.row()][position.column()] = null;
         return piece;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty() {
+        for (Object[] row : cells) {
+            for (Object piece : row) {
+                if (piece != null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void forEachPiece(BiConsumer<Position, ? super P> action) {
+        Validate.notNull(action, "Action must not be null");
+
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                Object piece = cells[row][column];
+
+                if (piece != null) {
+                    action.accept(new Position(row, column), (P) piece);
+                }
+            }
+        }
     }
 }

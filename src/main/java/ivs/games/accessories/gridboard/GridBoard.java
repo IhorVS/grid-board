@@ -2,6 +2,8 @@ package ivs.games.accessories.gridboard;
 
 import org.apache.commons.lang3.Validate;
 
+import java.util.function.BiConsumer;
+
 /**
  * A rectangular grid that holds at most one piece in each cell.
  *
@@ -70,4 +72,20 @@ public interface GridBoard<P extends Piece> {
                 "Column %d is outside the board. Valid columns: 0 to %d",
                 position.column(), getColumns() - 1);
     }
+
+    /**
+     * Returns whether the board contains no pieces.
+     *
+     * @return {@code true} if every cell is empty
+     */
+    boolean isEmpty();
+
+    /**
+     * Performs an action for each occupied cell, in row-major order.
+     * Empty cells are skipped.
+     *
+     * @param action the action to perform with the position and piece
+     * @throws NullPointerException if {@code action} is {@code null}
+     */
+    void forEachPiece(BiConsumer<Position, ? super P> action);
 }
