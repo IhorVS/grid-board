@@ -2,6 +2,7 @@ package ivs.games.accessories.gridboard;
 
 import org.apache.commons.lang3.Validate;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
@@ -88,4 +89,33 @@ public interface GridBoard<P extends Piece> {
      * @throws NullPointerException if {@code action} is {@code null}
      */
     void forEachPiece(BiConsumer<Position, ? super P> action);
+
+    /**
+     * Returns a snapshot of the occupied cells and their pieces.
+     *
+     * <p>The returned map is unmodifiable and does not change when the board
+     * changes. Piece objects are shared with the board and are immutable
+     * according to the {@link Piece} contract.</p>
+     *
+     * @return an unmodifiable map from positions to pieces
+     */
+    Map<Position, P> getState();
+
+    /**
+     * Replaces the entire board contents with the given state.
+     *
+     * <p>Positions must belong to this board, and pieces must not be {@code null}.
+     * The entire state is validated before the board is changed. Later changes
+     * to the supplied map do not affect the board.</p>
+     *
+     * @param state the new contents of the board; an empty map clears it
+     * @throws NullPointerException if {@code state}, a position, or a piece is {@code null}
+     * @throws IllegalArgumentException if a position is outside the board
+     */
+    void setState(Map<Position, P> state);
+
+    /**
+     * Removes all pieces from the board without changing its dimensions.
+     */
+    void clear();
 }

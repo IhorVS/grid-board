@@ -3,6 +3,9 @@ package ivs.games.accessories.gridboard;
 import lombok.Getter;
 import org.apache.commons.lang3.Validate;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
@@ -114,5 +117,43 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<Position, P> getState() {
+        Map<Position, P> state = new HashMap<>();
+        forEachPiece(state::put);
+        return Map.copyOf(state);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setState(Map<Position, P> state) {
+        Validate.notNull(state, "State must not be null");
+
+        for (Map.Entry<Position, P> entry : state.entrySet()) {
+            validatePosition(entry.getKey());
+            Validate.notNull(entry.getValue(), "State must not contain null pieces");
+        }
+
+        clear();
+
+        for (Map.Entry<Position, P> entry : state.entrySet()) {
+            Position position = entry.getKey();
+            cells[position.row()][position.column()] = entry.getValue();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        Arrays.stream(cells).forEach(row -> Arrays.fill(row, null));
     }
 }

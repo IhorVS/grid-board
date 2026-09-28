@@ -2,6 +2,9 @@ package ivs.games.accessories.gridboard;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -112,5 +115,102 @@ class StandardBoardTest {
 
         board.remove(position);
         assertTrue(board.isEmpty());
+    }
+
+    @Test
+    void getStateReturnsOnlyOccupiedCells() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 3);
+        Position first = new Position(0, 1);
+        Position second = new Position(1, 2);
+        board.place(first, TestPiece.FIRST);
+        board.place(second, TestPiece.SECOND);
+
+        assertEquals(Map.of(
+                first, TestPiece.FIRST,
+                second, TestPiece.SECOND), board.getState());
+    }
+
+    @Test
+    void getStateReturnsUnmodifiableSnapshot() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 2);
+        Position position = new Position(0, 1);
+        board.place(position, TestPiece.FIRST);
+
+        Map<Position, TestPiece> snapshot = board.getState();
+
+        assertThrows(UnsupportedOperationException.class,
+                () -> snapshot.put(new Position(1, 1), TestPiece.SECOND));
+
+        board.remove(position);
+
+        assertEquals(Map.of(position, TestPiece.FIRST), snapshot);
+        assertTrue(board.getState().isEmpty());
+    }
+
+    @Test
+    void setStateReplacesBoardContents() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 2);
+        Position oldPosition = new Position(0, 0);
+        Position newPosition = new Position(1, 1);
+        board.place(oldPosition, TestPiece.FIRST);
+
+        board.setState(Map.of(newPosition, TestPiece.SECOND));
+
+        assertNull(board.get(oldPosition));
+        assertSame(TestPiece.SECOND, board.get(newPosition));
+        assertEquals(Map.of(newPosition, TestPiece.SECOND), board.getState());
+    }
+
+    @Test
+    void setStateDoesNotRetainInputMap() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 2);
+        Position position = new Position(0, 1);
+        Map<Position, TestPiece> state = new HashMap<>();
+        state.put(position, TestPiece.FIRST);
+
+        board.setState(state);
+        state.clear();
+
+        assertSame(TestPiece.FIRST, board.get(position));
+    }
+
+    @Test
+    void setStateRejectsInvalidStateWithoutChangingBoard() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 2);
+        Position existingPosition = new Position(0, 0);
+        board.place(existingPosition, TestPiece.FIRST);
+        Map<Position, TestPiece> originalState = board.getState();
+
+        Map<Position, TestPiece> outsideBoard = new HashMap<>();
+        outsideBoard.put(new Position(2, 0), TestPiece.SECOND);
+        assertThrows(IllegalArgumentException.class, () -> board.setState(outsideBoard));
+        assertEquals(originalState, board.getState());
+
+        Map<Position, TestPiece> nullPosition = new HashMap<>();
+        nullPosition.put(null, TestPiece.SECOND);
+        assertThrows(NullPointerException.class, () -> board.setState(nullPosition));
+        assertEquals(originalState, board.getState());
+
+        Map<Position, TestPiece> nullPiece = new HashMap<>();
+        nullPiece.put(new Position(1, 1), null);
+        assertThrows(NullPointerException.class, () -> board.setState(nullPiece));
+        assertEquals(originalState, board.getState());
+
+        assertThrows(NullPointerException.class, () -> board.setState(null));
+        assertEquals(originalState, board.getState());
+    }
+
+    @Test
+    void clearRemovesPiecesWithoutChangingDimensions() {
+        StandardBoard<TestPiece> board = new StandardBoard<>(2, 3);
+        board.place(new Position(0, 0), TestPiece.FIRST);
+        board.place(new Position(1, 2), TestPiece.SECOND);
+
+        board.clear();
+
+        assertTrue(board.isEmpty());
+        assertTrue(board.getState().isEmpty());
+        assertEquals(2, board.getRows());
+        assertEquals(3, board.getColumns());
     }
 }
