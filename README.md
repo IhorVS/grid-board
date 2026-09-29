@@ -72,6 +72,12 @@ chooses the number and placement of pieces. Standard pieces are enum values,
 so the same value can be placed in multiple cells. Games can also implement
 `ChessPiece` or `CheckersPiece` to define additional immutable pieces.
 
+Standard types, colors, and pieces have short, case-sensitive codes. A piece
+code combines its color and type: `WP` is a white chess pawn, `BK` is a black
+chess king, `WM` is an ordinary white checker, and `WK` is a white checkers
+king. The standard enums provide `getCode()` and `fromCode()`. These codes
+identify pieces; they do not define a notation for moves.
+
 ## Board state
 
 `getState()` returns an unmodifiable snapshot mapping occupied positions to

@@ -13,7 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ChessBoardTest {
 
     private enum AdditionalType implements ChessPieceType {
-        ARCHBISHOP
+        ARCHBISHOP;
+
+        @Override
+        public String getCode() {
+            return "A";
+        }
     }
 
     private enum AdditionalPiece implements ChessPiece {
@@ -21,7 +26,7 @@ class ChessBoardTest {
 
         @Override
         public String getCode() {
-            return "X";
+            return "WA";
         }
 
         @Override
