@@ -8,7 +8,27 @@ import java.util.function.BiConsumer;
 /**
  * A rectangular grid that holds at most one piece in each cell.
  *
- * <p>Cell coordinates are described by {@link Position}. The board stores
+ * <pre>
+ *                       column
+ *                  0    1    ...   7
+ *                +----+----+-----+----+
+ *     row 0      | a1 | b1 | ... | h1 |
+ *                +----+----+-----+----+
+ *     row 1      | a2 | b2 | ... | h2 |
+ *                +----+----+-----+----+
+ *       ...      | ...  ...  ...  ... |
+ *                +----+----+-----+----+
+ *     row 7      | a8 | b8 | ... | h8 |
+ *                +----+----+-----+----+
+ * </pre>
+ *
+ * <p>Rows increase from top to bottom; columns increase from left to right.
+ * Thus, {@code a1} corresponds to {@code Position(0, 0)}, and {@code h8}
+ * corresponds to {@code Position(7, 7)}. The board has no player orientation.
+ * The game determines which direction is forward for each player and how
+ * the board is displayed.</p>
+ *
+ * <p>Cell coordinates are represented by {@link Position}. The board stores
  * pieces but does not enforce game rules.</p>
  *
  * @param <P> the type of pieces stored on this board

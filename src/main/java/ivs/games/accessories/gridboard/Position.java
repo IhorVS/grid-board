@@ -6,22 +6,23 @@ import lombok.NonNull;
  * The position of a cell on a grid board.
  *
  * <pre>
- *                 column
- *              0   1   2
- *            +---+---+---+
- * row 0      |   |   |   |
- *            +---+---+---+
- * row 1      |   |   |   |
- *            +---+---+---+
- * row 2      |   |   |   |
- *            +---+---+---+
+ *                    column
+ *                  0   1   2
+ *                +---+---+---+
+ *     row 0      |0,0|0,1|0,2|
+ *                +---+---+---+
+ *     row 1      |1,0|1,1|1,2|
+ *                +---+---+---+
+ *     row 2      |2,0|2,1|2,2|
+ *                +---+---+---+
  * </pre>
  *
  * <p>Rows increase from top to bottom; columns increase from left to right.
- * Both indexes start at zero.</p>
+ * Both indexes start at zero. In letter-and-number cell addressing,
+ * {@code a1} is {@code Position(0, 0)}.</p>
  *
- * @param row the row index
- * @param column the column index
+ * @param row the zero-based row index
+ * @param column the zero-based column index
  */
 public record Position(int row, int column) {
      /**
