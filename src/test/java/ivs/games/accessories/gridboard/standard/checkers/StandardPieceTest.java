@@ -17,12 +17,14 @@ class StandardPieceTest {
 
     @ParameterizedTest
     @MethodSource("pieces")
-    void hasExpectedTypeColorAndCode(
-            StandardPiece piece, CheckerType type, PieceColor color, String code) {
+    void hasExpectedTypeColorCodeAndSymbol(
+            StandardPiece piece, CheckerType type, PieceColor color, String code, char symbol) {
         assertSame(type, piece.getType());
         assertSame(color, piece.getColor());
         assertEquals(code, piece.getCode());
+        assertEquals(symbol, piece.getSymbol());
         assertSame(piece, StandardPiece.fromCode(code));
+        assertSame(piece, StandardPiece.fromSymbol(symbol));
     }
 
     @ParameterizedTest
@@ -37,12 +39,18 @@ class StandardPieceTest {
         assertThrows(NullPointerException.class, () -> StandardPiece.fromCode(null));
     }
 
+    @Test
+    void rejectsUnknownSymbol() {
+        assertThrows(IllegalArgumentException.class, () -> StandardPiece.fromSymbol('?'));
+    }
+
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
     private static Stream<Arguments> pieces() {
         return Stream.of(
-                Arguments.of(StandardPiece.WHITE_MAN, CheckerType.MAN, PieceColor.WHITE, "WM"),
-                Arguments.of(StandardPiece.WHITE_KING, CheckerType.KING, PieceColor.WHITE, "WK"),
-                Arguments.of(StandardPiece.BLACK_MAN, CheckerType.MAN, PieceColor.BLACK, "BM"),
-                Arguments.of(StandardPiece.BLACK_KING, CheckerType.KING, PieceColor.BLACK, "BK")
+                Arguments.of(StandardPiece.WHITE_MAN, CheckerType.MAN, PieceColor.WHITE, "WM", '\u26C0'),
+                Arguments.of(StandardPiece.WHITE_KING, CheckerType.KING, PieceColor.WHITE, "WK", '\u26C1'),
+                Arguments.of(StandardPiece.BLACK_MAN, CheckerType.MAN, PieceColor.BLACK, "BM", '\u26C2'),
+                Arguments.of(StandardPiece.BLACK_KING, CheckerType.KING, PieceColor.BLACK, "BK", '\u26C3')
         );
     }
 }

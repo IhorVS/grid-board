@@ -17,12 +17,14 @@ class StandardPieceTest {
 
     @ParameterizedTest
     @MethodSource("pieces")
-    void hasExpectedTypeColorAndCode(
-            StandardPiece piece, ChessType type, PieceColor color, String code) {
+    void hasExpectedTypeColorCodeAndSymbol(
+            StandardPiece piece, ChessType type, PieceColor color, String code, char symbol) {
         assertSame(type, piece.getType());
         assertSame(color, piece.getColor());
         assertEquals(code, piece.getCode());
+        assertEquals(symbol, piece.getSymbol());
         assertSame(piece, StandardPiece.fromCode(code));
+        assertSame(piece, StandardPiece.fromSymbol(symbol));
     }
 
     @ParameterizedTest
@@ -37,20 +39,26 @@ class StandardPieceTest {
         assertThrows(NullPointerException.class, () -> StandardPiece.fromCode(null));
     }
 
+    @Test
+    void rejectsUnknownSymbol() {
+        assertThrows(IllegalArgumentException.class, () -> StandardPiece.fromSymbol('?'));
+    }
+
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
     private static Stream<Arguments> pieces() {
         return Stream.of(
-                Arguments.of(StandardPiece.WHITE_PAWN, ChessType.PAWN, PieceColor.WHITE, "WP"),
-                Arguments.of(StandardPiece.WHITE_KNIGHT, ChessType.KNIGHT, PieceColor.WHITE, "WN"),
-                Arguments.of(StandardPiece.WHITE_BISHOP, ChessType.BISHOP, PieceColor.WHITE, "WB"),
-                Arguments.of(StandardPiece.WHITE_ROOK, ChessType.ROOK, PieceColor.WHITE, "WR"),
-                Arguments.of(StandardPiece.WHITE_QUEEN, ChessType.QUEEN, PieceColor.WHITE, "WQ"),
-                Arguments.of(StandardPiece.WHITE_KING, ChessType.KING, PieceColor.WHITE, "WK"),
-                Arguments.of(StandardPiece.BLACK_PAWN, ChessType.PAWN, PieceColor.BLACK, "BP"),
-                Arguments.of(StandardPiece.BLACK_KNIGHT, ChessType.KNIGHT, PieceColor.BLACK, "BN"),
-                Arguments.of(StandardPiece.BLACK_BISHOP, ChessType.BISHOP, PieceColor.BLACK, "BB"),
-                Arguments.of(StandardPiece.BLACK_ROOK, ChessType.ROOK, PieceColor.BLACK, "BR"),
-                Arguments.of(StandardPiece.BLACK_QUEEN, ChessType.QUEEN, PieceColor.BLACK, "BQ"),
-                Arguments.of(StandardPiece.BLACK_KING, ChessType.KING, PieceColor.BLACK, "BK")
+                Arguments.of(StandardPiece.WHITE_PAWN, ChessType.PAWN, PieceColor.WHITE, "WP", '\u2659'),
+                Arguments.of(StandardPiece.WHITE_KNIGHT, ChessType.KNIGHT, PieceColor.WHITE, "WN", '\u2658'),
+                Arguments.of(StandardPiece.WHITE_BISHOP, ChessType.BISHOP, PieceColor.WHITE, "WB", '\u2657'),
+                Arguments.of(StandardPiece.WHITE_ROOK, ChessType.ROOK, PieceColor.WHITE, "WR", '\u2656'),
+                Arguments.of(StandardPiece.WHITE_QUEEN, ChessType.QUEEN, PieceColor.WHITE, "WQ", '\u2655'),
+                Arguments.of(StandardPiece.WHITE_KING, ChessType.KING, PieceColor.WHITE, "WK", '\u2654'),
+                Arguments.of(StandardPiece.BLACK_PAWN, ChessType.PAWN, PieceColor.BLACK, "BP", '\u265F'),
+                Arguments.of(StandardPiece.BLACK_KNIGHT, ChessType.KNIGHT, PieceColor.BLACK, "BN", '\u265E'),
+                Arguments.of(StandardPiece.BLACK_BISHOP, ChessType.BISHOP, PieceColor.BLACK, "BB", '\u265D'),
+                Arguments.of(StandardPiece.BLACK_ROOK, ChessType.ROOK, PieceColor.BLACK, "BR", '\u265C'),
+                Arguments.of(StandardPiece.BLACK_QUEEN, ChessType.QUEEN, PieceColor.BLACK, "BQ", '\u265B'),
+                Arguments.of(StandardPiece.BLACK_KING, ChessType.KING, PieceColor.BLACK, "BK", '\u265A')
         );
     }
 }
