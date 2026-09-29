@@ -13,7 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CheckersBoardTest {
 
     private enum AdditionalType implements CheckersPieceType {
-        CUSTOM
+        CUSTOM;
+
+        @Override
+        public String getCode() {
+            return "X";
+        }
     }
 
     private enum AdditionalPiece implements CheckersPiece {
@@ -27,6 +32,11 @@ class CheckersBoardTest {
         @Override
         public PieceColor getColor() {
             return PieceColor.WHITE;
+        }
+
+        @Override
+        public String getCode() {
+            return "WX";
         }
     }
 

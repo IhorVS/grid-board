@@ -30,9 +30,9 @@ public final class CellNotation {
      *
      * @param address the address, such as {@code e2}
      * @return the corresponding position
-     * @throws NullPointerException if {@code address} is {@code null}
+     * @throws NullPointerException     if {@code address} is {@code null}
      * @throws IllegalArgumentException if the address has an invalid format
-     *         or its row number exceeds the supported integer range
+     *                                  or its row number exceeds the supported integer range
      */
     public static Position parse(@NonNull String address) {
         Matcher matcher = ADDRESS_PATTERN.matcher(address);
@@ -52,9 +52,9 @@ public final class CellNotation {
      *
      * @param position the position to convert
      * @return the address, such as {@code e2}
-     * @throws NullPointerException if {@code position} is {@code null}
+     * @throws NullPointerException     if {@code position} is {@code null}
      * @throws IllegalArgumentException if the row is negative or too large,
-     *         or the column is outside the range {@code 0} to {@code 25}
+     *                                  or the column is outside the range {@code 0} to {@code 25}
      */
     public static String format(@NonNull Position position) {
         Validate.isTrue(position.row() >= 0,

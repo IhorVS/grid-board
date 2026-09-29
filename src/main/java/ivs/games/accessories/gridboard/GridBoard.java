@@ -129,7 +129,7 @@ public interface GridBoard<P extends Piece> {
      * to the supplied map do not affect the board.</p>
      *
      * @param state the new contents of the board; an empty map clears it
-     * @throws NullPointerException if {@code state}, a position, or a piece is {@code null}
+     * @throws NullPointerException     if {@code state}, a position, or a piece is {@code null}
      * @throws IllegalArgumentException if a position is outside the board
      */
     void setState(Map<Position, P> state);

@@ -10,4 +10,13 @@ package ivs.games.accessories.gridboard;
  * <p>Movement and interaction rules are defined by the game, not by the piece.</p>
  */
 public interface Piece {
+    /**
+     * Returns a stable text code for this piece.
+     *
+     * <p>The code is chosen by the game. It need not be unique across different
+     * games or represent an individual piece on the board.</p>
+     *
+     * @return the piece code
+     */
+    String getCode();
 }

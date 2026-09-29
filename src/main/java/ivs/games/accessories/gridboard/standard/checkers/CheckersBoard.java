@@ -16,7 +16,7 @@ public class CheckersBoard<P extends CheckersPiece> extends StandardBoard<P> {
     /**
      * Creates an empty board with the given dimensions.
      *
-     * @param rows the number of rows
+     * @param rows    the number of rows
      * @param columns the number of columns
      * @throws IllegalArgumentException if either dimension is less than one
      */

@@ -20,6 +20,11 @@ class ChessBoardTest {
         WHITE_ARCHBISHOP;
 
         @Override
+        public String getCode() {
+            return "X";
+        }
+
+        @Override
         public ChessPieceType getType() {
             return AdditionalType.ARCHBISHOP;
         }
