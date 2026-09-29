@@ -38,4 +38,18 @@ public enum PieceColor {
             default -> throw new IllegalArgumentException("Unknown piece color code: " + code);
         };
     }
+
+    /**
+     * Returns the opposite piece color.
+     *
+     * @param color the color whose opposite is requested
+     * @return {@code BLACK} for {@code WHITE}, or {@code WHITE} for {@code BLACK}
+     * @throws NullPointerException if {@code color} is {@code null}
+     */
+    public static PieceColor getOpposite(@NonNull PieceColor color) {
+        return switch (color) {
+            case WHITE -> BLACK;
+            case BLACK -> WHITE;
+        };
+    }
 }

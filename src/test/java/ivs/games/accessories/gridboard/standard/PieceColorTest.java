@@ -24,4 +24,16 @@ class PieceColorTest {
     void rejectsNullCode() {
         assertThrows(NullPointerException.class, () -> PieceColor.fromCode(null));
     }
+
+    @Test
+    void returnsOppositeColor() {
+        assertSame(PieceColor.BLACK, PieceColor.getOpposite(PieceColor.WHITE));
+        assertSame(PieceColor.WHITE, PieceColor.getOpposite(PieceColor.BLACK));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void rejectsNullColor() {
+        assertThrows(NullPointerException.class, () -> PieceColor.getOpposite(null));
+    }
 }

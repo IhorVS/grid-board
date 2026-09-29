@@ -1,7 +1,11 @@
 /**
- * Provides the shared color and typed-piece contracts used by the standard
- * chess and checkers sets.
+ * Provides shared color and typed-piece contracts for standard chess and checkers sets.
  *
- * <p>These types describe pieces; they do not define movement or game rules.</p>
+ * <p>{@link ivs.games.accessories.gridboard.standard.ColoredPiece} combines an immutable piece
+ * with its type and color. {@link ivs.games.accessories.gridboard.standard.PieceColor}
+ * provides {@code WHITE} and {@code BLACK}, with case-sensitive codes {@code W} and {@code B}
+ * and parsing through {@code fromCode}.</p>
+ *
+ * <p>These types do not define movement directions, initial arrangements or game rules.</p>
  */
 package ivs.games.accessories.gridboard.standard;
