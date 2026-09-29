@@ -1,6 +1,7 @@
 package ivs.games.accessories.gridboard;
 
 import lombok.Getter;
+import lombok.NonNull;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
@@ -36,6 +37,17 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
         this.rows = rows;
         this.columns = columns;
         this.cells = new Object[rows][columns];
+    }
+
+    /**
+     * Creates a board with the same dimensions and piece positions as the source.
+     *
+     * @param source the board to copy
+     * @throws NullPointerException if {@code source} is {@code null}
+     */
+    public StandardBoard(@NonNull GridBoard<P> source) {
+        this(source.getRows(), source.getColumns());
+        setState(source.getState());
     }
 
     /**

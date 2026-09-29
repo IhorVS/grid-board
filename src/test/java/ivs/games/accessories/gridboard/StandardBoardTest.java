@@ -213,4 +213,43 @@ class StandardBoardTest {
         assertEquals(2, board.getRows());
         assertEquals(3, board.getColumns());
     }
+
+    @Test
+    void copyConstructorCopiesDimensionsAndState() {
+        StandardBoard<TestPiece> source = new StandardBoard<>(2, 3);
+        source.place(new Position(0, 1), TestPiece.FIRST);
+        source.place(new Position(1, 2), TestPiece.SECOND);
+
+        StandardBoard<TestPiece> copy = new StandardBoard<>(source);
+
+        assertEquals(2, copy.getRows());
+        assertEquals(3, copy.getColumns());
+        assertEquals(source.getState(), copy.getState());
+    }
+
+    @Test
+    void copyConstructorCreatesIndependentBoard() {
+        StandardBoard<TestPiece> source = new StandardBoard<>(2, 2);
+        Position originalPosition = new Position(0, 0);
+        Position newPosition = new Position(1, 1);
+        source.place(originalPosition, TestPiece.FIRST);
+
+        StandardBoard<TestPiece> copy = new StandardBoard<>(source);
+        copy.remove(originalPosition);
+        copy.place(newPosition, TestPiece.SECOND);
+
+        assertSame(TestPiece.FIRST, source.get(originalPosition));
+        assertNull(source.get(newPosition));
+
+        source.clear();
+
+        assertNull(copy.get(originalPosition));
+        assertSame(TestPiece.SECOND, copy.get(newPosition));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void copyConstructorRejectsNullSource() {
+        assertThrows(NullPointerException.class, () -> new StandardBoard<>((GridBoard<TestPiece>) null));
+    }
 }
