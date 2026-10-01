@@ -1,6 +1,6 @@
 package ivs.games.accessories.gridboard.render;
 
-import ivs.games.accessories.gridboard.GridBoard;
+import ivs.games.accessories.gridboard.GridBoardView;
 import ivs.games.accessories.gridboard.Piece;
 import org.apache.commons.lang3.Validate;
 
@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 /**
- * Renders a board as text with centered piece representations.
+ * Renders a board view as text with centered piece representations.
  *
  * <p>The bottom line contains cells {@code a1, a2, ...}. Lettered columns
  * are displayed from the last column at the top to column {@code a}
@@ -17,6 +17,8 @@ import java.util.function.Function;
  *
  * <p>Empty cells contain spaces. Correct alignment requires a monospaced
  * font and text whose code points each occupy one terminal position.</p>
+ *
+ * <p>The renderer requires only the reading operations provided by {@link GridBoardView}.</p>
  *
  * @param <P> the type of pieces on the board
  */
@@ -46,9 +48,9 @@ public class ConsoleBoardRenderer<P extends Piece> {
     /**
      * Creates a renderer with a fixed cell width.
      *
-     * @param textOf the function providing piece representations
+     * @param textOf    the function providing piece representations
      * @param cellWidth the full width of each cell, excluding its borders
-     * @throws NullPointerException if {@code textOf} is {@code null}
+     * @throws NullPointerException     if {@code textOf} is {@code null}
      * @throws IllegalArgumentException if {@code cellWidth} is not positive
      */
     public ConsoleBoardRenderer(Function<? super P, String> textOf, int cellWidth) {
@@ -63,18 +65,17 @@ public class ConsoleBoardRenderer<P extends Piece> {
      * <p>The representation function is called once for each occupied cell.
      * Its result must be a non-null string containing no control characters.</p>
      *
-     * @param board the board to render
+     * @param board the board view to render
      * @return the rendered board, without a trailing line separator
-     * @throws NullPointerException if {@code board} or a piece representation is {@code null}
+     * @throws NullPointerException     if {@code board} or a piece representation is {@code null}
      * @throws IllegalArgumentException if there are more than 26 columns,
      *                                  a representation contains control characters,
      *                                  or the fixed width cannot accommodate the text or labels
      */
-    public String render(GridBoard<P> board) {
+    public String render(GridBoardView<P> board) {
         Validate.notNull(board, "Board must not be null");
         Validate.isTrue(board.getColumns() <= COLUMN_LABELS.length(),
-                "Number of columns must not exceed %d: %d",
-                COLUMN_LABELS.length(), board.getColumns());
+                "Number of columns must not exceed %d: %d", COLUMN_LABELS.length(), board.getColumns());
 
         String[][] cells = new String[board.getColumns()][board.getRows()];
 
@@ -83,8 +84,7 @@ public class ConsoleBoardRenderer<P extends Piece> {
         }
 
         board.forEachPiece((position, piece) -> {
-            String text = Validate.notNull(textOf.apply(piece),
-                    "Piece representation must not be null");
+            String text = Validate.notNull(textOf.apply(piece), "Piece representation must not be null");
 
             Validate.isTrue(text.codePoints().noneMatch(Character::isISOControl),
                     "Piece representation must not contain control characters");
@@ -132,8 +132,7 @@ public class ConsoleBoardRenderer<P extends Piece> {
         }
 
         Validate.isTrue(cellWidth >= requiredWidth,
-                "Cell width %d is too small. Required width: %d",
-                cellWidth, requiredWidth);
+                "Cell width %d is too small. Required width: %d", cellWidth, requiredWidth);
 
         return cellWidth;
     }

@@ -5,6 +5,9 @@
  * centered text, borders and coordinate labels on all four sides. Empty cells contain spaces.
  * Automatic width includes two padding spaces; fixed width excludes borders and must fit the text and labels.</p>
  *
+ * <p>The renderer accepts {@link ivs.games.accessories.gridboard.GridBoardView}, requiring only reading operations.
+ * Mutable boards implementing that interface can also be rendered.</p>
+ *
  * <p>Lettered columns run from the last column at the top to {@code a} at the bottom.
  * Numeric rows increase from left to right. Rendering does not change board coordinates or contents.
  * At most 26 lettered columns are supported.</p>

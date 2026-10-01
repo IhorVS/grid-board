@@ -48,6 +48,37 @@ limited to 26 columns; this restriction belongs to cell notation and the rendere
 `rowDeltaTo(other)` and `columnDeltaTo(other)` return signed differences to
 another position. These operations do not validate board boundaries.
 
+## Reading and modifying a board
+
+The board API separates access to reading and modification:
+
+- `GridBoardView<P>` provides dimensions, cell reading, position validation,
+  occupied-cell traversal and state snapshots.
+- `GridBoard<P>` extends `GridBoardView<P>` and adds `place`, `remove`,
+  `setState` and `clear`.
+- `StandardBoard<P>` implements `GridBoard<P>` using a two-dimensional array.
+
+A `GridBoardView` reference exposes no modification methods. It is not an
+immutable snapshot or an unmodifiable wrapper: the underlying board may change
+through another reference. Giving a mutable implementation a view type does
+not prevent a caller from casting it back to its mutable type.
+
+```java
+GridBoard<StandardPiece> board = new ChessBoard<>(8, 8);
+board.place(CellNotation.parse("a5"), StandardPiece.WHITE_KING);
+
+GridBoardView<StandardPiece> view = board;
+StandardPiece king = view.get(CellNotation.parse("a5"));
+
+board.clear();
+boolean empty = view.isEmpty(); // true: the view observes the same board
+```
+
+Both `ChessBoard` and `CheckersBoard` inherit these contracts from
+`StandardBoard`; dedicated chess or checkers view interfaces are not required.
+Games can extend the view and mutable interfaces to expose additional properties
+while reusing `StandardBoard` through inheritance.
+
 ## Using a board
 
 ```java
@@ -98,24 +129,15 @@ set: for example, `WK` exists in both sets.
 | Checkers | `M` man, `K` king                                               |
 | Colors   | `W` white, `B` black                                            |
 
-The chess enum has twelve values; the checkers enum has four. Neither set
-tracks quantities or assigns identities to individual pieces. Boards do not
-restrict placement to cells of a particular color or enforce promotion.
+```java
+GridBoardView<StandardPiece> view = board;
+StandardBoard<StandardPiece> copy = new StandardBoard<>(view);
+```
 
-Both `StandardPiece` enums also expose `getSymbol()` and `fromSymbol(char)`
-for their Unicode symbols. This functionality belongs to the concrete enums,
-not to `Piece` or the piece-type interfaces. There is no dedicated Unicode
-console renderer; the demos use text codes to avoid font-dependent alignment.
-
-## Board state
-
-`getState()` returns an unmodifiable snapshot mapping occupied positions to
-pieces. `setState(state)` replaces the board's contents after validating the
-entire map. `clear()` removes all pieces. A copy constructor creates another
-board with the same dimensions and piece positions. `StandardBoard` accepts a
-`GridBoard<P>` source; `ChessBoard` and `CheckersBoard` accept a source of their
-respective board class. Copying does not change the source, and subsequent
-changes to either board do not affect the other board's cells.
+The view refers to the live source; `getState()` returns a fixed snapshot;
+the copy is an independent mutable board. Subclasses with additional properties
+must copy those properties in their own constructors. The map returned by
+`getState()` contains occupied cells only, not dimensions or subclass properties.
 
 Snapshots and copies share references to piece objects. Implementations of
 `Piece` must therefore be immutable.
@@ -123,14 +145,16 @@ Snapshots and copies share references to piece objects. Implementations of
 ## Console rendering
 
 `ConsoleBoardRenderer<P>` accepts a function converting a piece to text and
-returns a string. It does not print or modify the board.
+returns a string. Its `render` method accepts `GridBoardView<P>`, so it can
+render a board exposed solely through its reading interface. It does not print
+or modify the board.
 
 ```java
 ConsoleBoardRenderer<StandardPiece> automatic = new ConsoleBoardRenderer<>(StandardPiece::getCode);
-System.out.println(automatic.render(board));
+System.out.println(automatic.render(view));
 
 ConsoleBoardRenderer<StandardPiece> fixed = new ConsoleBoardRenderer<>(StandardPiece::getCode, 7);
-System.out.println(fixed.render(board));
+System.out.println(fixed.render(view));
 ```
 
 Automatic width is the longest piece representation or numeric label plus
@@ -141,7 +165,7 @@ The conversion function runs once per occupied cell and must return non-null
 text without control characters. An empty string is allowed.
 
 The renderer displays lettered columns vertically, in descending order, and
-numeric rows horizontally, in ascending order. Thus the bottom line is
+numeric rows horizontally, in ascending order. Thus, the bottom line is
 `a1 ... a8` and the top line is `h1 ... h8` on an 8-by-8 board. Labels appear
 on all four sides. This presentation does not change `Position` coordinates.
 
@@ -171,9 +195,9 @@ The following classes are in `src/test/java/ivs/games/accessories/gridboard/demo
 - `CheckersRendererDemo`: a 10-by-10 board with twenty men per side for
   international draughts, treating `a1` as a dark cell.
 
-Run their `main` methods from the IDE with the test classpath. Both show
-piece codes with automatic sizing and a fixed width of seven. They are not
-included in the main library JAR.
+Run their `main` methods from the IDE with the test classpath. Both demos 
+display piece codes with automatic cell sizing and a fixed cell width of seven. 
+They are not included in the main library JAR.
 
 The demos put white pieces at the `a` edge and black pieces at the opposite
 edge. For example, the white chess king is at `a5` and the queen at `a4` in

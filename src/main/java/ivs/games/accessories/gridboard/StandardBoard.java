@@ -10,7 +10,10 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
- * A grid board backed by a two-dimensional array.
+ * A mutable grid board backed by a two-dimensional array.
+ *
+ * <p>Implements both reading and modification operations through {@link GridBoard}.
+ * The board can be passed as {@link GridBoardView} to consumers that require only reading operations.</p>
  *
  * @param <P> the type of pieces stored on this board
  */
@@ -40,12 +43,15 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
     }
 
     /**
-     * Creates a board with the same dimensions and piece positions as the source.
+     * Creates a board with the same dimensions and piece positions as the source view.
      *
-     * @param source the board to copy
+     * <p>The new board has independent cell contents but shares immutable piece objects
+     * with the source. Subsequent changes to either board do not affect the other board's cells.</p>
+     *
+     * @param source the board view to copy
      * @throws NullPointerException if {@code source} is {@code null}
      */
-    public StandardBoard(@NonNull GridBoard<P> source) {
+    public StandardBoard(@NonNull GridBoardView<P> source) {
         this(source.getRows(), source.getColumns());
         setState(source.getState());
     }
@@ -77,8 +83,7 @@ public class StandardBoard<P extends Piece> implements GridBoard<P> {
         validatePosition(position);
         Validate.notNull(piece, "Piece must not be null");
 
-        Validate.validState(cells[position.row()][position.column()] == null,
-                "Cell is occupied: %s", position);
+        Validate.validState(cells[position.row()][position.column()] == null, "Cell is occupied: %s", position);
 
         cells[position.row()][position.column()] = piece;
     }

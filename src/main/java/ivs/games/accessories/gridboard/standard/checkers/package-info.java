@@ -12,6 +12,11 @@
  * It also exposes Unicode symbols through {@code getSymbol} and {@code fromSymbol}.
  * These symbols are properties of the enum, not requirements of the piece contracts.</p>
  *
+ * <p>The board inherits {@link ivs.games.accessories.gridboard.GridBoard} and
+ * {@link ivs.games.accessories.gridboard.GridBoardView} through StandardBoard.
+ * It can be exposed through the shared view interface while preserving its piece type parameter;
+ * no separate game-specific view interface is required.</p>
+ *
  * <p>The same enum value can occupy multiple cells; codes do not identify individual pieces.
  * Custom types and pieces may implement
  * {@link ivs.games.accessories.gridboard.standard.checkers.CheckersPieceType} and

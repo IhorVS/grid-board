@@ -252,4 +252,42 @@ class StandardBoardTest {
     void copyConstructorRejectsNullSource() {
         assertThrows(NullPointerException.class, () -> new StandardBoard<>((GridBoard<TestPiece>) null));
     }
+
+    /**
+     * Verifies that copying a board through GridBoardView preserves its dimensions
+     * and piece positions while keeping cell contents independent in both directions.
+     * Immutable piece objects are shared between the source and the copy.
+     */
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    @Test
+    void copiesBoardFromViewWithIndependentCellContents() {
+        // Prepare a rectangular board and expose it through the reading interface.
+        StandardBoard<TestPiece> source = new StandardBoard<>(3, 5);
+        Position position = new Position(1, 4);
+        TestPiece piece = TestPiece.values()[0];
+        source.place(position, piece);
+
+        GridBoardView<TestPiece> view = source;
+        StandardBoard<TestPiece> copy = new StandardBoard<>(view);
+
+        // The copy preserves dimensions and positions, sharing immutable piece objects.
+        assertEquals(view.getRows(), copy.getRows());
+        assertEquals(view.getColumns(), copy.getColumns());
+        assertEquals(view.getState(), copy.getState());
+        assertSame(piece, copy.get(position));
+
+        // Removing a piece from the copy does not change the source.
+        copy.remove(position);
+
+        assertTrue(copy.isEmpty());
+        assertSame(piece, source.get(position));
+
+        // Clearing the source does not change the copy.
+        Position anotherPosition = new Position(0, 0);
+        copy.place(anotherPosition, piece);
+        source.clear();
+
+        assertTrue(source.isEmpty());
+        assertSame(piece, copy.get(anotherPosition));
+    }
 }
