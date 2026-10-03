@@ -56,7 +56,12 @@ The board API separates access to reading and modification:
   occupied-cell traversal and state snapshots.
 - `GridBoard<P>` extends `GridBoardView<P>` and adds `place`, `remove`,
   `setState` and `clear`.
-- `StandardBoard<P>` implements `GridBoard<P>` using a two-dimensional array.
+- `standard.StandardBoard<P>` implements `GridBoard<P>` using a two-dimensional array.
+
+The root package `ivs.games.accessories.gridboard` contains the board contracts,
+`Piece`, `Position` and `CellNotation`. The concrete `StandardBoard` implementation
+is in `ivs.games.accessories.gridboard.standard`, alongside `ColoredPiece` and
+`PieceColor`. Chess and checkers specializations are in its respective subpackages.
 
 A `GridBoardView` reference exposes no modification methods. It is not an
 immutable snapshot or an unmodifiable wrapper: the underlying board may change
@@ -129,7 +134,27 @@ set: for example, `WK` exists in both sets.
 | Checkers | `M` man, `K` king                                               |
 | Colors   | `W` white, `B` black                                            |
 
+The chess enum has twelve values; the checkers enum has four. The same value can
+occupy multiple cells. Neither set tracks piece quantities or individual identities.
+
+Both `StandardPiece` enums expose `getSymbol()` and `fromSymbol(char)` for their
+Unicode symbols. These methods belong to the concrete enums, not to the shared
+piece contracts. The console demonstrations use text codes.
+
+## Board state
+
+`getState()` returns an unmodifiable snapshot of occupied positions and pieces.
+`setState(state)` replaces the board contents after validating the entire map;
+`clear()` removes all pieces. Invalid state entries are rejected before the board
+is changed. Subsequent changes to the supplied map do not affect the board.
+
+`StandardBoard` accepts a `GridBoardView<P>` in its copy constructor. `ChessBoard`
+and `CheckersBoard` accept a source of their respective board class. Copies preserve
+dimensions and piece positions while keeping their cell contents independent.
+
 ```java
+import ivs.games.accessories.gridboard.standard.StandardBoard;
+
 GridBoardView<StandardPiece> view = board;
 StandardBoard<StandardPiece> copy = new StandardBoard<>(view);
 ```
@@ -172,13 +197,13 @@ on all four sides. This presentation does not change `Position` coordinates.
 For a 2-by-2 board with a white king at `a1` and a black king at `b2`:
 
 ```text
-     1    2
+    1    2
   +----+----+
 b |    | BK | b
   +----+----+
 a | WK |    | a
   +----+----+
-     1    2
+    1    2
 ```
 
 Rendering supports at most 26 lettered columns. Width is counted in Unicode

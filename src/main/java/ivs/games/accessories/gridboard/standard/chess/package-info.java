@@ -13,7 +13,8 @@
  * These symbols are properties of the enum, not requirements of the piece contracts.</p>
  *
  * <p>The board inherits {@link ivs.games.accessories.gridboard.GridBoard} and
- * {@link ivs.games.accessories.gridboard.GridBoardView} through StandardBoard.
+ * {@link ivs.games.accessories.gridboard.GridBoardView} through
+ * {@link ivs.games.accessories.gridboard.standard.StandardBoard}.
  * It can be exposed through the shared view interface while preserving its piece type parameter;
  * no separate game-specific view interface is required.</p>
  *

@@ -2,7 +2,7 @@ package ivs.games.accessories.gridboard.render;
 
 import ivs.games.accessories.gridboard.Piece;
 import ivs.games.accessories.gridboard.Position;
-import ivs.games.accessories.gridboard.StandardBoard;
+import ivs.games.accessories.gridboard.standard.StandardBoard;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

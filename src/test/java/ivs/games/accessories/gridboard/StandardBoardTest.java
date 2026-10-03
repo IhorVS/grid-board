@@ -1,5 +1,6 @@
 package ivs.games.accessories.gridboard;
 
+import ivs.games.accessories.gridboard.standard.StandardBoard;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

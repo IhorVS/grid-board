@@ -1,6 +1,6 @@
 package ivs.games.accessories.gridboard.standard.checkers;
 
-import ivs.games.accessories.gridboard.StandardBoard;
+import ivs.games.accessories.gridboard.standard.StandardBoard;
 import lombok.NonNull;
 
 /**

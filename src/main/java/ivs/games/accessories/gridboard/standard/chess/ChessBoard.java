@@ -1,6 +1,6 @@
 package ivs.games.accessories.gridboard.standard.chess;
 
-import ivs.games.accessories.gridboard.StandardBoard;
+import ivs.games.accessories.gridboard.standard.StandardBoard;
 
 /**
  * A rectangular board for chess pieces.

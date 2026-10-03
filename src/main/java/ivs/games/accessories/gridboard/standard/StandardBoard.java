@@ -1,5 +1,9 @@
-package ivs.games.accessories.gridboard;
+package ivs.games.accessories.gridboard.standard;
 
+import ivs.games.accessories.gridboard.GridBoard;
+import ivs.games.accessories.gridboard.GridBoardView;
+import ivs.games.accessories.gridboard.Piece;
+import ivs.games.accessories.gridboard.Position;
 import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang3.Validate;

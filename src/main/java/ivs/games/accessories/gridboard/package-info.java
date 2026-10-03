@@ -4,7 +4,8 @@
  * <p>{@link ivs.games.accessories.gridboard.GridBoardView} provides reading operations, position validation,
  * occupied-cell traversal and state snapshots. {@link ivs.games.accessories.gridboard.GridBoard}
  * extends that contract with placement, removal, state replacement and clearing.
- * {@link ivs.games.accessories.gridboard.StandardBoard} implements both contracts using a two-dimensional array.</p>
+ * {@link ivs.games.accessories.gridboard.standard.StandardBoard} implements both contracts
+ * using a two-dimensional array.</p>
  *
  * <p>A view reference exposes no modification methods but is not an immutable snapshot or an unmodifiable wrapper.
  * The underlying board may change through another reference. Its implementation may also expose modification methods.
